@@ -15,8 +15,9 @@
 	<description>ROXY 2</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<vaadin.version>14.1.27</vaadin.version>
+		<org.apache.metamodel.version>5.3.1</org.apache.metamodel.version>
 	</properties>
 
 	<dependencies>
@@ -45,6 +46,33 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.metamodel</groupId>
+			<artifactId>MetaModel-core</artifactId>
+			<version>${org.apache.metamodel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.metamodel</groupId>
+			<artifactId>MetaModel-pojo</artifactId>
+			<version>${org.apache.metamodel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.metamodel</groupId>
+			<artifactId>MetaModel-csv</artifactId>
+			<version>${org.apache.metamodel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.metamodel</groupId>
+			<artifactId>MetaModel-jdbc</artifactId>
+			<version>${org.apache.metamodel.version}</version>
 		</dependency>
 	</dependencies>
 
