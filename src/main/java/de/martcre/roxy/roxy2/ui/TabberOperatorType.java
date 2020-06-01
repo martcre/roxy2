@@ -12,12 +12,12 @@ import java.util.List;
  *
  */
 public enum TabberOperatorType {
-	EQUALS_TO(OperatorType.EQUALS_TO, "EQUALS TO"), DIFFERENT_FROM(OperatorType.DIFFERENT_FROM, "DIFFERENT FROM"),
-	LIKE(OperatorType.LIKE, "LIKE"), NOT_LIKE(OperatorType.NOT_LIKE, "NOT LIKE"),
-	GREATER_THAN(OperatorType.GREATER_THAN, "GREATER THAN"),
+	EQUALS_TO(OperatorType.EQUALS_TO, "EQUALS_TO"), DIFFERENT_FROM(OperatorType.DIFFERENT_FROM, "DIFFERENT_FROM"),
+	LIKE(OperatorType.LIKE, "LIKE"), NOT_LIKE(OperatorType.NOT_LIKE, "NOT_LIKE"),
+	GREATER_THAN(OperatorType.GREATER_THAN, "GREATER_THAN"),
 	GREATER_THAN_OR_EQUAL(OperatorType.GREATER_THAN_OR_EQUAL, "GREATER_THAN_OR_EQUAL"),
-	LESS_THAN(OperatorType.LESS_THAN, "LESS THAN"),
-	LESS_THAN_OR_EQUAL(OperatorType.LESS_THAN_OR_EQUAL, "LESS THAN OR EQUAL"), IN(OperatorType.IN, "IN"),
+	LESS_THAN(OperatorType.LESS_THAN, "LESS_THAN"),
+	LESS_THAN_OR_EQUAL(OperatorType.LESS_THAN_OR_EQUAL, "LESS_THAN_OR_EQUAL"), IN(OperatorType.IN, "IN"),
 	NOT_IN(OperatorType.NOT_IN, "NOT_IN");
 
 	private final OperatorType operatorType;

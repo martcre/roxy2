@@ -1,9 +1,12 @@
-package de.martcre.roxy.roxy2.ui;
+package de.martcre.roxy.roxy2.autocomplete;
 
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.DataProviderListener;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.shared.Registration;
+import de.martcre.roxy.roxy2.autocomplete.lang.ChainOperator;
+import de.martcre.roxy.roxy2.autocomplete.lang.Item;
+import de.martcre.roxy.roxy2.autocomplete.lang.Operator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.FuzzyScore;
 import org.apache.logging.log4j.LogManager;
@@ -17,11 +20,10 @@ import java.util.stream.Stream;
 public class AutocompleteDataProvider implements DataProvider<String, String> {
 
     protected static Logger logger = LogManager.getLogger(AutocompleteDataProvider.class);
-    private static Pattern wordMatchPattern = Pattern.compile("(\\S*)$");
+    private static Pattern lastWordMatchPattern = Pattern.compile("(\\S*)$");
+    private static Pattern wordSplitter = Pattern.compile("\\s");
 
-    private String[] knownColumns = new String[]{"id", "firstName", "firstBorn", "fiZZZ", "lastName", "homeAdress", "otherAdresses"};
-    private String[] knownConnectors = new String[]{"AND", "OR"};
-    private String[] knownOperators = Arrays.stream(TabberOperatorType.values()).map(TabberOperatorType::toString).toArray(String[]::new);
+
 
     @Override
     public Stream<String> fetch(Query<String, String> query) {
@@ -30,38 +32,41 @@ public class AutocompleteDataProvider implements DataProvider<String, String> {
         query.getOffset();
 
         String input = query.getFilter().orElse("");
-
-        Matcher m = wordMatchPattern.matcher(input);
-        String lastWord = "";
-        if (m.find()) {
-            lastWord = m.group(1);
-            logger.info("Last Word: " + lastWord);
-        }
-
-        return Stream.concat(Stream.of(input), getSuggestions(input, lastWord));
+        return getSuggestions(input);
     }
 
-    private Stream<String> getSuggestions(String input, String lastWord) {
-        //  Skip everything if no lastWord is present:
-        if (lastWord.isEmpty()) return Stream.of(lastWord);
+    /**
+     * Try to interfere the next word.
+     *
+     * @param input the user typed input
+     * @return a stream of possible next words
+     */
+    private Stream<String> getSuggestions(String input) {
+
+        //  Skip everything if no input is present:
+        if (input.isEmpty()) return Stream.of(input);
+
+        Matcher m = lastWordMatchPattern.matcher(input);
+        final String lastWord = (m.find()) ? m.group(1) : "";
+
+
 
         // Input without lastWord, as this is going to be predicted:
         String prefixInput = input.substring(0, input.length() - lastWord.length());
 
         // Try match against known words:
-        Set<Pair<Integer, String>> cache = new HashSet<>();
+        Set<Pair<Integer, String>> resultCache = new HashSet<>();
 
-        Set<String> items = new HashSet<>();
-        items.addAll(Arrays.asList(knownColumns));
-        items.addAll(Arrays.asList(knownConnectors));
-        items.addAll(Arrays.asList(knownOperators));
+        Set<Item> items = new HashSet<>();
+        items.addAll(Arrays.asList(ChainOperator.CHAIN_OPERATORS));
+        items.addAll(Arrays.asList(Operator.OPERATORS));
 
         items.stream().forEach(item -> {
             FuzzyScore fuzzyScore = new FuzzyScore(Locale.ENGLISH);
-            cache.add(Pair.of(fuzzyScore.fuzzyScore(item, lastWord), prefixInput + item));
+            resultCache.add(Pair.of(fuzzyScore.fuzzyScore(item.getValue(), lastWord), prefixInput + item.getValue()));
         });
 
-        return cache.stream()
+        return resultCache.stream()
                 .filter(pair -> (pair.getKey() != 0))
                 .sorted(Comparator.comparing(Pair::getValue))
                 .sorted((pair1, pair2) -> Integer.compare(pair2.getKey(), pair1.getKey()))

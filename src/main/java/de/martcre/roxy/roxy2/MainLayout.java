@@ -2,7 +2,6 @@ package de.martcre.roxy.roxy2;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasElement;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,8 +10,6 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 import java.util.Objects;
-
-import static com.sun.tools.internal.xjc.reader.Ring.add;
 
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./styles/roxy.css")

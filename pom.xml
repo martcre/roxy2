@@ -74,6 +74,12 @@
 			<artifactId>MetaModel-jdbc</artifactId>
 			<version>${org.apache.metamodel.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

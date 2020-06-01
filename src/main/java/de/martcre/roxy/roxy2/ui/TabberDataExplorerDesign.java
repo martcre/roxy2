@@ -2,20 +2,23 @@ package de.martcre.roxy.roxy2.ui;
 
 
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import org.apache.metamodel.data.Row;
 
 @SuppressWarnings("serial")
 public class TabberDataExplorerDesign extends VerticalLayout {
 	
 	private Grid<Row> grid;
+	private ComboBox<String> filter;
 	private Checkbox liveFilteringMode;
 	private Checkbox enableAutomaticWildcards;
 	
 	public TabberDataExplorerDesign() {
 		setSizeFull();
-		add(getLiveFilteringMode(), getEnableAutomaticWildcards(), getGrid());
+		add(getFilter(), getGrid());
 	}
 
 	/**
@@ -30,7 +33,15 @@ public class TabberDataExplorerDesign extends VerticalLayout {
 		}
 		return grid;
 	}
-	
+
+	public ComboBox<String> getFilter() {
+		if (filter == null) {
+			filter = new ComboBox<>();
+			filter.setWidthFull();
+		}
+		return filter;
+	}
+
 	/**
 	 * The setting for the Live Filtering Mode.
 	 *
