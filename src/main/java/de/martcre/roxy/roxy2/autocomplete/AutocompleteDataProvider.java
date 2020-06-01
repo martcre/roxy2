@@ -21,7 +21,7 @@ public class AutocompleteDataProvider implements DataProvider<String, String> {
 
     protected static Logger logger = LogManager.getLogger(AutocompleteDataProvider.class);
     private static Pattern lastWordMatchPattern = Pattern.compile("(\\S*)$");
-    private static Pattern wordSplitter = Pattern.compile("\\s");
+    private static Pattern wordTokenizerPattern = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
 
 
 
@@ -46,8 +46,21 @@ public class AutocompleteDataProvider implements DataProvider<String, String> {
         //  Skip everything if no input is present:
         if (input.isEmpty()) return Stream.of(input);
 
+        Matcher matcher = wordTokenizerPattern.matcher(input);
+        List<String> tokenizedInput = new ArrayList<>();
+        while(matcher.find()) {
+            tokenizedInput.add(matcher.group());
+        }
+        tokenizedInput.stream().forEach(e -> {logger.info("WORD: " + e);});
+
+
+        /* TODO Next, take the secondary last and last word and map it to some languange type. Then, validate if
+            prefix/suffix is allowed, then put in these as Suggestions! */
+
         Matcher m = lastWordMatchPattern.matcher(input);
         final String lastWord = (m.find()) ? m.group(1) : "";
+
+
 
 
 
@@ -66,11 +79,12 @@ public class AutocompleteDataProvider implements DataProvider<String, String> {
             resultCache.add(Pair.of(fuzzyScore.fuzzyScore(item.getValue(), lastWord), prefixInput + item.getValue()));
         });
 
-        return resultCache.stream()
-                .filter(pair -> (pair.getKey() != 0))
-                .sorted(Comparator.comparing(Pair::getValue))
-                .sorted((pair1, pair2) -> Integer.compare(pair2.getKey(), pair1.getKey()))
-                .map(pair -> new String(pair.getValue()));
+        return Stream.concat(Stream.of(input),
+                resultCache.stream()
+                    .filter(pair -> (pair.getKey() != 0))
+                    .sorted(Comparator.comparing(Pair::getValue))
+                    .sorted((pair1, pair2) -> Integer.compare(pair2.getKey(), pair1.getKey()))
+                    .map(pair -> new String(pair.getValue())));
     }
 
     @Override
